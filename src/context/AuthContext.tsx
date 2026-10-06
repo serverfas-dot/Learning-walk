@@ -16,15 +16,10 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [role, setRole] = useState<AdminRole>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (localStorage.getItem(SA_SESSION_KEY) === 'true') {
-      setRole('super_admin');
-    }
-    setLoading(false);
-  }, []);
+  const [role, setRole] = useState<AdminRole>(
+    () => localStorage.getItem(SA_SESSION_KEY) === 'true' ? 'super_admin' : null
+  );
+  const loading = false;
 
   function superAdminLogin(id: string, password: string): { error: string | null } {
     if (id.trim() === SUPER_ADMIN_ID && password === SUPER_ADMIN_PASS) {
